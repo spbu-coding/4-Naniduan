@@ -8,8 +8,6 @@
 #define STRUCTURE_ERROR -2
 #define QDBMP_ERROR -3
 
-enum BMP_ERROR LAST_ERROR;
-
 struct MY_BMP_HEADER {
     unsigned short type;
     unsigned int size;
@@ -23,9 +21,3 @@ struct MY_BMP_HEADER {
     unsigned int number_of_colors;
     unsigned int number_of_important_colors;
 };
-
-/*struct MY_BMP {
-    struct MY_BMP_HEADER *header;
-    unsigned char* color_palette;
-    unsigned char* pixel_array;
-};*/

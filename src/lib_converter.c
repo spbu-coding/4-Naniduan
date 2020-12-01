@@ -185,7 +185,7 @@ int converter(FILE *input_file, FILE *output_file, struct MY_BMP_HEADER *bmp_hea
 
     while(ftell(input_file) < bmp_header->size){
         if (read_char(&byte, input_file) == 0){
-            fprintf(stderr, "the converter cant read something\n");
+            fprintf(stderr, "the converter can't read the image while converting\n");
             return STRUCTURE_ERROR;
         }
         if (bmp_header->bits_per_pixel == 8 &&
@@ -206,11 +206,11 @@ int converter(FILE *input_file, FILE *output_file, struct MY_BMP_HEADER *bmp_hea
 }
 
 int compare_headers(struct MY_BMP_HEADER *header1, struct MY_BMP_HEADER *header2){
-    if (abs(header1->width) != abs(header2->width)){
+    if (header1->width != header2->width){
         fprintf(stderr, "the pictures have different widths");
         return -1;
     }
-    if (header1->height != header2->height) {
+    if (abs(header1->height) != abs(header2->height)) {
         fprintf(stderr, "the pictures have different heights");
         return -1;
     }
@@ -229,10 +229,6 @@ int compare_headers(struct MY_BMP_HEADER *header1, struct MY_BMP_HEADER *header2
 
 int compare_pixels(FILE *file1, FILE *file2, struct MY_BMP_HEADER *header, const unsigned int *palette_size){
     unsigned int count_of_pixels=0;
-    if (header->width < 0){
-        header->width = abs(header->width);
-        fprintf(stderr, "the width of the image is negative\n");
-    }
     if (header->height < 0){
         header->height = abs(header->height);
         fprintf(stderr, "the height of the image is negative\n");

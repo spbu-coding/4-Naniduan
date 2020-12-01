@@ -26,7 +26,7 @@ int QDBMP_realisation(char *input_name, char *output_name){
             BMP_GetPixelRGB( bmp, x, y, &r, &g, &b );
 
             /* Invert RGB values */
-            BMP_SetPixelRGB( bmp, x, y, 255 - r, 255 - g, 255 - b );
+            BMP_SetPixelRGB( bmp, x, y, ~r, ~g, ~b );
         }
     }
 
@@ -42,25 +42,34 @@ int QDBMP_realisation(char *input_name, char *output_name){
 }
 
 int main(int argc, char **argv){
-    struct MY_BMP_HEADER bmp_header;
-    char *realisation = argv[1], *input_name = argv[2],  *output_name = argv[3], *mine = "--mine";
+    struct MY_BMP_HEADER* bmp_header = (struct MY_BMP_HEADER*)malloc(sizeof(struct MY_BMP_HEADER));
+    char *realisation = argv[1], *input_name = argv[2],  *output_name = argv[3], *mine = "--mine", *theirs = "--theirs";
 
     if (strncmp(realisation, mine, strlen(mine)) == 0){
         FILE *input_file;
         input_file = fopen(input_name, "rb+");
-        int error = get_header(input_file, &bmp_header);
+        int error = get_header(input_file, bmp_header);
         if (error != 0) return  error;
 
         fseek(input_file, 0, SEEK_SET);
         FILE *output_file;
         output_file = fopen(output_name, "wb+");
-        error = MY_realisation(input_file, output_file, &bmp_header);
+        error = MY_realisation(input_file, output_file, bmp_header);
         if (error != 0) return  error;
+
+        fclose(output_file);
+        fclose(input_file);
     }
-    else{
+    else if (strncmp(realisation, theirs, strlen(theirs)) == 0){
         int error = QDBMP_realisation(input_name, output_name);
         if (error != 0) return QDBMP_ERROR;
     }
+    else{
+        fprintf(stderr, "invalid parameter %s : only --mine and --theirs are acceptable parameters\n", realisation);
+        return -1;
+    }
+
+    free(bmp_header);
 
     return 0;
 }

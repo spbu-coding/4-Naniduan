@@ -8,6 +8,7 @@
 #define STRUCTURE_ERROR -2
 #define QDBMP_ERROR -3
 
+
 struct MY_BMP_HEADER {
     unsigned short type;
     unsigned int size;
